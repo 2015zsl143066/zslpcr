@@ -35,7 +35,8 @@ boolean InitialStart() {
 
 void setup() {
   //init factory settings
-   pinMode(LED_BUILTIN, OUTPUT);
+   pinMode(8, OUTPUT);
+   digitalWrite(8, LOW); 
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
@@ -48,6 +49,8 @@ void setup() {
 }
 
 void loop() {
+  //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();
+  
 }
 
