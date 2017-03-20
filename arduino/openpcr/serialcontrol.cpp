@@ -37,6 +37,8 @@ SerialControl::SerialControl(Display* pDisplay)
 , iReceivedStatusRequest(false)
 {  
   Serial.begin(BAUD_RATE);
+
+  //please light a led !
 }
 
 SerialControl::~SerialControl() {

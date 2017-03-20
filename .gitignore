@@ -11,3 +11,7 @@
 *.s
 .dep
 usb/default
+modules.xml
+
+.idea/workspace.xml
+cmake-build-debug/
