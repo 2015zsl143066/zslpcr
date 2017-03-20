@@ -36,12 +36,13 @@ SerialControl::SerialControl(Display* pDisplay)
 , iCommandId(0)
 , iReceivedStatusRequest(false)
 {  
-  Serial.begin(BAUD_RATE);
-  pinMode(LED_BUILTIN, OUTPUT);
+   pinMode(LED_BUILTIN, OUTPUT);
    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-   delay(1000);                       // wait for a second
+   delay(500);                       // wait for a second
    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-   delay(1000);                       // wait for a second
+   delay(500);                       // wait for a second
+  Serial.begin(BAUD_RATE);
+ 
 }
 
 SerialControl::~SerialControl() {

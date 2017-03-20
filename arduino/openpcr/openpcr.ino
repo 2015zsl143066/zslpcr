@@ -35,7 +35,7 @@ boolean InitialStart() {
 
 void setup() {
   //init factory settings
-   pinMode(13, OUTPUT);
+   pinMode(LED_BUILTIN, OUTPUT);
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
