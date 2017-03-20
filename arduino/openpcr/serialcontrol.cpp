@@ -36,11 +36,11 @@ SerialControl::SerialControl(Display* pDisplay)
 , iCommandId(0)
 , iReceivedStatusRequest(false)
 {  
-   pinMode(8, OUTPUT);
-  digitalWrite(8, LOW);   // turn the LED on (HIGH is the voltage level)
-   delay(200000);                       // wait for a second
-  // digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
-   //delay(20000);                       // wait for a second
+   //pinMode(7, OUTPUT);
+  //digitalWrite(7, HIGH);   // turn the LED on (HIGH is the voltage level)
+  //delay(2000);                       // wait for a second
+   //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
+   //delay(2000);                       // wait for a second
   Serial.begin(BAUD_RATE);
  
 }
@@ -58,7 +58,7 @@ boolean SerialControl::ReadPacket()
 {
   int availableBytes = Serial.available();
   int origAvailableBytes = availableBytes;
- 
+ //digitalWrite(7, HIGH);
   if (packetState < STATE_PACKETHEADER_DONE) { //new packet
     //sync with start code
     while (availableBytes) {
@@ -67,8 +67,8 @@ boolean SerialControl::ReadPacket()
       if (packetState == STATE_STARTCODE_FOUND){
         //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
        //delay(1000);                       // wait for a second
-        digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
-        delay(10000);                       // wait for a second
+        //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
+       //delay(10000);                       // wait for a second
         packetLen = incomingByte;
         packetState = STATE_PACKETLEN_LOW;
       } 

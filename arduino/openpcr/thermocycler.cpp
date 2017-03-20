@@ -192,12 +192,23 @@ PcrStatus Thermocycler::Start() {
     
 // internal
 void Thermocycler::Loop() {
+  /*if(iProgramState == EStartup){
+    if (millis() > STARTUP_DELAY){
+  digitalWrite(7, HIGH);
+  }
+  }*/
   switch (iProgramState) {
   case EStartup:
     if (millis() > STARTUP_DELAY) {
       iProgramState = EStopped;
       
+      if(iRestarted == 1 ){
+       digitalWrite(7, HIGH); 
+      }
+      
+      //digitalWrite(7, HIGH);
       if (!iRestarted && !ipSerialControl->CommandReceived()) {
+       digitalWrite(7, HIGH);
         //check for stored program
         SCommand command;
         if (ProgramStore::RetrieveProgram(command, (char*)ipSerialControl->GetBuffer()))
@@ -256,7 +267,7 @@ void Thermocycler::Loop() {
     break;
   }
   
-  //lid 
+ /* //lid 
   iLidThermistor.ReadTemp();
   ControlLid();
   
@@ -268,7 +279,7 @@ void Thermocycler::Loop() {
   //program
   UpdateEta();
   ipDisplay->Update();
-  ipSerialControl->Process();
+  ipSerialControl->Process();*/
 }
 
 //private
