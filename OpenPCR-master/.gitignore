@@ -1,0 +1,13 @@
+*.o
+*.lst
+*.hex
+*.lss
+*.lst
+*.map
+*.sym
+*.eep
+*.elf
+*.aws
+*.s
+.dep
+usb/default
