@@ -19,9 +19,10 @@
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(5, 6); // RX, TX
 #include "pcr_includes.h"
 #include "thermocycler.h"
+
+SoftwareSerial mySerial(5, 6); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
