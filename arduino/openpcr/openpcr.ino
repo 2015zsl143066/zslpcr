@@ -37,13 +37,11 @@ boolean InitialStart() {
 void setup() {
   //init factory settings
    // Open serial communications and wait for port to open:
-  Serial.begin(57600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
 
-  Serial.println("Goodnight moon!");
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
@@ -62,13 +60,8 @@ void setup() {
 }
 
 void loop() {
-if (mySerial.available()) {
-    Serial.write(mySerial.read());
-  }
-  if (Serial.available()) {
-    mySerial.write(Serial.read());
-  }
-  
+    Serial.write("hello zsl! ");
+
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();
