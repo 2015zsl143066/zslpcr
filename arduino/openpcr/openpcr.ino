@@ -45,7 +45,6 @@ void setup() {
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
- // mySerial.println("Hello, world?");
    //pinMode(7, OUTPUT);
   // digitalWrite(7, HIGH); 
   if (InitialStart()) {
