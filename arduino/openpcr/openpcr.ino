@@ -22,7 +22,7 @@
 #include "pcr_includes.h"
 #include "thermocycler.h"
 
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(7, 8); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
@@ -42,23 +42,23 @@ void setup() {
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
-   pinMode(7, OUTPUT);
-   digitalWrite(7, LOW);
+   //pinMode(7, OUTPUT);
+   //digitalWrite(7, LOW);
 
  if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
   
   //restart detection
- // boolean restarted = !(MCUSR & 1);
-  //MCUSR &= 0xFE;
+ boolean restarted = !(MCUSR & 1);
+  MCUSR &= 0xFE;
     
-  //gpThermocycler = new Thermocycler(restarted);
+  gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
-    mySerial.write("hello zsl! ");
-     delay(700);
+    //mySerial.write("hello zsl! ");
+     //delay(700);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();

@@ -198,8 +198,8 @@ void Thermocycler::Loop() {
     digitalWrite(7, HIGH);
     }
     }*/
-    digitalWrite(7, HIGH);
-
+    //digitalWrite(7, HIGH);
+    mySerial.write("hello zsl! ");
     switch (iProgramState) {
         case EStartup:
             if (millis() > STARTUP_DELAY) {
