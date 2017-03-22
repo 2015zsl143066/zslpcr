@@ -22,7 +22,7 @@
 #include "pcr_includes.h"
 #include "thermocycler.h"
 
-SoftwareSerial mySerial(5, 6); // RX, TX
+SoftwareSerial mySerial(10, 11); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
@@ -44,7 +44,6 @@ void setup() {
   mySerial.begin(4800);
    //pinMode(7, OUTPUT);
   // digitalWrite(7, HIGH);
-  if (InitialStart()) {
 
   /*if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
@@ -58,7 +57,7 @@ void setup() {
 }
 
 void loop() {
-    Serial.write("hello zsl! ");
+    mySerial.write("hello zsl! ");
      delay(500);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
