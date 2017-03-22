@@ -19,7 +19,7 @@
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(5, 6); // RX, TX
+SoftwareSerial mySerial(10, 11); // RX, TX
 #include "pcr_includes.h"
 #include "thermocycler.h"
 
@@ -37,17 +37,11 @@ boolean InitialStart() {
 void setup() {
   //init factory settings
    // Open serial communications and wait for port to open:
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
 
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
- // mySerial.println("Hello, world?");
-   //pinMode(7, OUTPUT);
-  // digitalWrite(7, HIGH); 
+
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
