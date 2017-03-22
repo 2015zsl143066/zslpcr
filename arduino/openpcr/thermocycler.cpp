@@ -24,7 +24,7 @@
 #include "serialcontrol.h"
 #include "Wire.h"
 #include <avr/pgmspace.h>
-
+#include "debug.h"
 //constants
 
 // I2C address for MCP3422 - base address for MCP3424
@@ -199,8 +199,8 @@ void Thermocycler::Loop() {
     }
     }*/
     //digitalWrite(7, HIGH);
- //   mySerial.write("hello zsl! ");
-    switch (iProgramState) {
+  //mySerial->write("xixixi! ");
+    /*switch (iProgramState) {
         case EStartup:
             if (millis() > STARTUP_DELAY) {
                 iProgramState = EStopped;
@@ -268,7 +268,7 @@ void Thermocycler::Loop() {
                 abs(ipCurrentStep->GetTemp() - GetPlateTemp()) <= CYCLE_START_TOLERANCE)
                 iRamping = false;
             break;
-    }
+    }*/
 
     /* //lid
      iLidThermistor.ReadTemp();
@@ -281,8 +281,8 @@ void Thermocycler::Loop() {
 
      //program
      UpdateEta();
-     ipDisplay->Update();
-     ipSerialControl->Process();*/
+     ipDisplay->Update();*/
+     ipSerialControl->Process();
 }
 
 //private

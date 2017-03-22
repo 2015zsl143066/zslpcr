@@ -42,7 +42,7 @@ void setup() {
 
 
   // set the data rate for the SoftwareSerial port
-  mySerial.begin(4800);
+  mySerial->begin(115200);
    //pinMode(7, OUTPUT);
    //digitalWrite(7, LOW);
 
@@ -58,7 +58,7 @@ void setup() {
 }
 
 void loop() {
-    //mySerial.write("hello zsl! ");
+    //mySerial->write("hello zsl! ");
      //delay(700);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
