@@ -18,7 +18,8 @@
 
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
-
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(5, 6); // RX, TX
 #include "pcr_includes.h"
 #include "thermocycler.h"
 
@@ -35,7 +36,19 @@ boolean InitialStart() {
 
 void setup() {
   //init factory settings
-   pinMode(7, OUTPUT);
+   // Open serial communications and wait for port to open:
+  Serial.begin(57600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
+
+  Serial.println("Goodnight moon!");
+
+  // set the data rate for the SoftwareSerial port
+  mySerial.begin(4800);
+  mySerial.println("Hello, world?");
+   //pinMode(7, OUTPUT);
   // digitalWrite(7, HIGH); 
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
@@ -49,6 +62,13 @@ void setup() {
 }
 
 void loop() {
+if (mySerial.available()) {
+    Serial.write(mySerial.read());
+  }
+  if (Serial.available()) {
+    mySerial.write(Serial.read());
+  }
+  
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();
