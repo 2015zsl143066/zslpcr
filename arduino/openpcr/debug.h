@@ -6,5 +6,5 @@
 #define ZSLPCR_DEBUG_H
 #include <SoftwareSerial.h>
 
-extern SoftwareSerial mySerial(7, 8); // RX, TX
+extern SoftwareSerial mySerial; // RX, TX
 #endif //ZSLPCR_DEBUG_H
