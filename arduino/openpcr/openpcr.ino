@@ -42,23 +42,27 @@ void setup() {
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
-   //pinMode(7, OUTPUT);
-  // digitalWrite(7, HIGH);
+   pinMode(7, OUTPUT);
+  digitalWrite(7, LOW);
 
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
   
   //restart detection
- boolean restarted = !(MCUSR & 1);
-  MCUSR &= 0xFE;
-  gpThermocycler = new Thermocycler(restarted);
+  //boolean restarted = !(MCUSR & 1);
+ // MCUSR &= 0xFE;
+    
+//  gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
     mySerial.write("hello zsl! ");
      delay(500);
- gpThermocycler->Loop();
+  //digitalWrite(7, HIGH); 
+  //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
+  gpThermocycler->Loop();
   
 }
+
 
