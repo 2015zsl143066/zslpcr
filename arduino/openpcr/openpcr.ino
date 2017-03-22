@@ -61,7 +61,7 @@ void setup() {
 
 void loop() {
     Serial.write("hello zsl! ");
-
+     delay(500);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();
