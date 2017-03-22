@@ -21,8 +21,9 @@
 #include <SoftwareSerial.h>
 #include "pcr_includes.h"
 #include "thermocycler.h"
+#include "debug.h"
 
-SoftwareSerial mySerial(7, 8); // RX, TX
+//SoftwareSerial mySerial(7, 8); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
