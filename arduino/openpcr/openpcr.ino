@@ -17,7 +17,7 @@
  */
 
 #include <LiquidCrystal.h>
-//#include <EEPROM.h>
+#include <EEPROM.h>
 #include <SoftwareSerial.h>
 SoftwareSerial mySerial(10, 11); // RX, TX
 #include "pcr_includes.h"
@@ -25,14 +25,14 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
-/*boolean InitialStart() {
+boolean InitialStart() {
   for (int i = 0; i < 50; i++) {
     if (EEPROM.read(i) != 0xFF)
       return false;
   }
   
   return true;
-}*/
+}
 
 void setup() {
   //init factory settings
@@ -42,23 +42,20 @@ void setup() {
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
 
-  /*if (InitialStart()) {
+  if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
-  }*/
+  }
   
   //restart detection
-  //boolean restarted = !(MCUSR & 1);
- // MCUSR &= 0xFE;
-    
- // gpThermocycler = new Thermocycler(restarted);
+ boolean restarted = !(MCUSR & 1);
+  MCUSR &= 0xFE;
+  gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
     mySerial.write("hello zsl! ");
      delay(500);
-  //digitalWrite(7, HIGH); 
-  //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
-  //gpThermocycler->Loop();
+ gpThermocycler->Loop();
   
 }
 
