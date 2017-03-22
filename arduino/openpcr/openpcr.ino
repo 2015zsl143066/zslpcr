@@ -43,17 +43,17 @@ void setup() {
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
    pinMode(7, OUTPUT);
-  digitalWrite(7, LOW);
+   digitalWrite(7, LOW);
 
-  if (InitialStart()) {
+ if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
   
   //restart detection
-  //boolean restarted = !(MCUSR & 1);
- // MCUSR &= 0xFE;
+  boolean restarted = !(MCUSR & 1);
+  MCUSR &= 0xFE;
     
-//  gpThermocycler = new Thermocycler(restarted);
+  gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
@@ -64,5 +64,4 @@ void loop() {
   gpThermocycler->Loop();
   
 }
-
 
