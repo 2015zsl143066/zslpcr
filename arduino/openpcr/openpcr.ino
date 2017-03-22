@@ -50,15 +50,15 @@ void setup() {
   }
   
   //restart detection
-  boolean restarted = !(MCUSR & 1);
-  MCUSR &= 0xFE;
+ // boolean restarted = !(MCUSR & 1);
+  //MCUSR &= 0xFE;
     
-  gpThermocycler = new Thermocycler(restarted);
+  //gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
     mySerial.write("hello zsl! ");
-     delay(500);
+     delay(700);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
   gpThermocycler->Loop();
