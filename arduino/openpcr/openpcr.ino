@@ -45,15 +45,15 @@ void setup() {
    //pinMode(7, OUTPUT);
   // digitalWrite(7, HIGH);
 
-  /*if (InitialStart()) {
+ if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
-  }*/
+  }
   
   //restart detection
-  //boolean restarted = !(MCUSR & 1);
- // MCUSR &= 0xFE;
+  boolean restarted = !(MCUSR & 1);
+  MCUSR &= 0xFE;
     
- // gpThermocycler = new Thermocycler(restarted);
+  gpThermocycler = new Thermocycler(restarted);
 }
 
 void loop() {
@@ -61,7 +61,7 @@ void loop() {
      delay(500);
   //digitalWrite(7, HIGH); 
   //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
-  //gpThermocycler->Loop();
+  gpThermocycler->Loop();
   
 }
 
