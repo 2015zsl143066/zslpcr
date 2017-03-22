@@ -42,8 +42,8 @@ void setup() {
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
-   //pinMode(7, OUTPUT);
-  // digitalWrite(7, HIGH);
+   pinMode(7, OUTPUT);
+   digitalWrite(7, LOW);
 
  if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
