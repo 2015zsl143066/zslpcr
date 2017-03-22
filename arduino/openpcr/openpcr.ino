@@ -19,9 +19,10 @@
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(10, 11); // RX, TX
 #include "pcr_includes.h"
 #include "thermocycler.h"
+
+SoftwareSerial mySerial(10, 11); // RX, TX
 
 Thermocycler* gpThermocycler = NULL;
 
@@ -41,6 +42,8 @@ void setup() {
 
   // set the data rate for the SoftwareSerial port
   mySerial.begin(4800);
+   //pinMode(7, OUTPUT);
+  // digitalWrite(7, HIGH);
 
   if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
