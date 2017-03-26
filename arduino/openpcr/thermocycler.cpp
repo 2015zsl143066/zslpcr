@@ -200,7 +200,7 @@ void Thermocycler::Loop() {
     }*/
     //digitalWrite(7, HIGH);
   //mySerial->write("xixixi! ");
-    /*switch (iProgramState) {
+    switch (iProgramState) {
         case EStartup:
             if (millis() > STARTUP_DELAY) {
                 iProgramState = EStopped;
@@ -268,20 +268,28 @@ void Thermocycler::Loop() {
                 abs(ipCurrentStep->GetTemp() - GetPlateTemp()) <= CYCLE_START_TOLERANCE)
                 iRamping = false;
             break;
-    }*/
+    }
 
     /* //lid
      iLidThermistor.ReadTemp();
      ControlLid();
 
-     //plate
+     plate*/
      iPlateThermistor.ReadTemp();
-     CalcPlateTarget();
+     //SetPeltier( COOL, abs(1023));
+    CalcPlateTarget();
      ControlPeltier();
 
      //program
      UpdateEta();
-     ipDisplay->Update();*/
+    
+     //iProgramState = ERunning;
+      ipDisplay->Update();
+    // mySerial->write("iProgramState:");
+    // mySerial->print(iProgramState,DEC);
+     //mySerial->println();
+      //mySerial->write("M");
+     //delay(1000);
      ipSerialControl->Process();
 }
 
@@ -465,7 +473,8 @@ void Thermocycler::SetPeltier(ThermalDirection dir, int pwm) {
         digitalWrite(2, LOW);
         digitalWrite(4, LOW);
     }
-
+   // mySerial->print(dir);
+    //mySerial->println();
     analogWrite(9, pwm);
 }
 

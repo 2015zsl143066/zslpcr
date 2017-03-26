@@ -18,7 +18,7 @@
 
 #include "pcr_includes.h"
 #include "thermistors.h"
-
+#include "debug.h"
 // lid resistance table, in Ohms
 PROGMEM const unsigned int LID_RESISTANCE_TABLE[] = {  
   32919, 31270, 29715, 28246, 26858, 25547, 24307, 23135, 22026, 20977,
@@ -146,6 +146,12 @@ void CPlateThermistor::ReadTemp() {
   unsigned long resistance = voltage_mv * 22000 / (5000 - voltage_mv); // in hecto ohms
  
   iTemp = TableLookup(PLATE_RESISTANCE_TABLE, sizeof(PLATE_RESISTANCE_TABLE) / sizeof(PLATE_RESISTANCE_TABLE[0]), -40, resistance);
+  //mySerial->print(iTemp);
+  // mySerial->println();
+  /* mySerial->print( voltage_mv);
+   mySerial->println();
+     mySerial->print(conv);
+   mySerial->println();*/
 }
 //------------------------------------------------------------------------------
 char CPlateThermistor::SPITransfer(volatile char data) {

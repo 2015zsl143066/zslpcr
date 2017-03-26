@@ -49,7 +49,8 @@ SerialControl::~SerialControl() {
 }
 
 void SerialControl::Process() {
-  while (ReadPacket()) {}
+// ReadPacket();
+ while (ReadPacket()) {}
 }
 
 /////////////////////////////////////////////////////////////////
@@ -112,6 +113,10 @@ boolean SerialControl::ReadPacket()
   }
   
   if (packetState == STATE_PACKETHEADER_DONE){
+         mySerial->write("S");
+          mySerial->write("availableBytes:");
+          mySerial->print(availableBytes);
+          mySerial->println();
     while(availableBytes > 0 && packetLen > 0){
       byte incomingByte = Serial.read();
       availableBytes--;
@@ -134,6 +139,7 @@ boolean SerialControl::ReadPacket()
       //reset, to find START_CODE again
       packetState = STATE_START;
     }
+         mySerial->write("x");
   }
   
   if (availableBytes < origAvailableBytes)

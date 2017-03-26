@@ -22,7 +22,7 @@
 #include "thermocycler.h"
 #include "thermistors.h"
 #include "program.h"
-
+#include "debug.h"
 #define RESET_INTERVAL 30000 //ms
 
 //progmem strings
@@ -80,6 +80,9 @@ void Display::Update() {
   char buf[16];
   
   Thermocycler::ProgramState state = GetThermocycler().GetProgramState();
+  //mySerial->print("state :");
+   //mySerial->print(state);
+    //mySerial->println();
   if (iLastState != state)
     iLcd.clear();
   iLastState = state;
@@ -97,7 +100,7 @@ void Display::Update() {
   case Thermocycler::EStopped:
     iLcd.setCursor(0, 1);
  #ifdef DEBUG_DISPLAY
-    iLcd.print(iszDebugMsg);
+   iLcd.print(iszDebugMsg);
  #else
     iLcd.print(GetThermocycler().GetProgName());
  #endif
