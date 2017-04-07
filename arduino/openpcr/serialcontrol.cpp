@@ -57,8 +57,14 @@ void SerialControl::Process() {
 // Private
 boolean SerialControl::ReadPacket()
 {
+
+  delay(2000);
   int availableBytes = Serial.available();
   int origAvailableBytes = availableBytes;
+
+          mySerial->write("availableBytes:");
+          mySerial->print(availableBytes,DEC);
+          mySerial->println();
  // mySerial->write("xixixi! ");
  //digitalWrite(7, HIGH);
   if (packetState < STATE_PACKETHEADER_DONE) { //new packet
@@ -67,9 +73,8 @@ boolean SerialControl::ReadPacket()
       byte incomingByte = Serial.read();
       availableBytes--;
       
-      mySerial->write("C");
-      mySerial->print( bEscapeCodeFound);
-      mySerial->print("\t");
+      mySerial->write("C:");
+      mySerial->print(incomingByte,HEX);
       mySerial->println();
        //mySerial->write(incomingByte);
       if (packetState == STATE_STARTCODE_FOUND){
@@ -114,9 +119,7 @@ boolean SerialControl::ReadPacket()
   
   if (packetState == STATE_PACKETHEADER_DONE){
          mySerial->write("S");
-          mySerial->write("availableBytes:");
-          mySerial->print(availableBytes);
-          mySerial->println();
+  
     while(availableBytes > 0 && packetLen > 0){
       byte incomingByte = Serial.read();
       availableBytes--;

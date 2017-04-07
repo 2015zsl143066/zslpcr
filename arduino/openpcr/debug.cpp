@@ -3,4 +3,4 @@
 //
 
 #include "debug.h"
- SoftwareSerial* mySerial=new SoftwareSerial(7, 8); // RX, TX
+ SoftwareSerial* mySerial=new SoftwareSerial(14, 10); // RX, TX
