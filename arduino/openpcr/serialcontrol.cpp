@@ -42,15 +42,18 @@ SerialControl::SerialControl(Display* pDisplay)
    //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
    //delay(2000);                       // wait for a second
   Serial.begin(BAUD_RATE);
- 
+ /* while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  Serial.write("start");*/
 }
 
 SerialControl::~SerialControl() {
 }
 
 void SerialControl::Process() {
-// ReadPacket();
- while (ReadPacket()) {}
+//ReadPacket();
+// while (ReadPacket()) {}
 }
 
 /////////////////////////////////////////////////////////////////
@@ -58,16 +61,17 @@ void SerialControl::Process() {
 boolean SerialControl::ReadPacket()
 {
 
-  delay(2000);
+ /* mySerial->write("availableBytes:");
+  //delay(2000);
   int availableBytes = Serial.available();
   int origAvailableBytes = availableBytes;
 
-          mySerial->write("availableBytes:");
+          //mySerial->write("availableBytes:");
           mySerial->print(availableBytes,DEC);
           mySerial->println();
  // mySerial->write("xixixi! ");
  //digitalWrite(7, HIGH);
-  if (packetState < STATE_PACKETHEADER_DONE) { //new packet
+ //if (packetState < STATE_PACKETHEADER_DONE) { //new packet
     //sync with start code
     while (availableBytes) {
       byte incomingByte = Serial.read();
@@ -107,17 +111,29 @@ boolean SerialControl::ReadPacket()
           packetState = STATE_START; //reset
         }
         break;
-      } 
-      else if (incomingByte == START_CODE && bEscapeCodeFound == false)
+      }
+      else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
+
+          buf[packetRealLen++] = incomingByte;
+      }
+      else if ( packetState == STATE_START && incomingByte == START_CODE)
         packetState = STATE_STARTCODE_FOUND;
-      else if (incomingByte == ESCAPE_CODE)
-        bEscapeCodeFound = true;
+      else if (incomingByte == ESCAPE_CODE) {
+          bEscapeCodeFound = true;
+          //if (packetRealLen>2)
+          ProcessPacket(buf, packetRealLen);
+          packetState = STATE_START;
+          packetRealLen=0;
+      }
       else
-        bEscapeCodeFound = false;
+      {
+          bEscapeCodeFound = false;
+          packetState = STATE_START;
+      }
     }
-  }
+ // }*/
   
-  if (packetState == STATE_PACKETHEADER_DONE){
+  /*if (packetState == STATE_PACKETHEADER_DONE){
          mySerial->write("S");
   
     while(availableBytes > 0 && packetLen > 0){
@@ -143,12 +159,12 @@ boolean SerialControl::ReadPacket()
       packetState = STATE_START;
     }
          mySerial->write("x");
-  }
+  }*/
   
-  if (availableBytes < origAvailableBytes)
+  /*if (availableBytes < origAvailableBytes)
     return true;
   else
-    return false;
+    return false;*/
 }
 
 void SerialControl::ProcessPacket(byte* data, int datasize)

@@ -45,7 +45,8 @@ void setup() {
   mySerial->begin(115200);
    //pinMode(7, OUTPUT);
    //digitalWrite(7, LOW);
-
+  mySerial->write("start");
+  mySerial->println();
  if (InitialStart()) {
     EEPROM.write(0, 100); // set contrast to 100
   }
