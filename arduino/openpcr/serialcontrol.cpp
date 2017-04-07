@@ -52,7 +52,7 @@ SerialControl::~SerialControl() {
 }
 
 void SerialControl::Process() {
-//ReadPacket();
+ReadPacket();
 // while (ReadPacket()) {}
 }
 
@@ -61,14 +61,14 @@ void SerialControl::Process() {
 boolean SerialControl::ReadPacket()
 {
 
- /* mySerial->write("availableBytes:");
+ // mySerial->write("availableBytes:");
   //delay(2000);
   int availableBytes = Serial.available();
   int origAvailableBytes = availableBytes;
 
           //mySerial->write("availableBytes:");
-          mySerial->print(availableBytes,DEC);
-          mySerial->println();
+//          mySerial->print(availableBytes,DEC);
+//          mySerial->println();
  // mySerial->write("xixixi! ");
  //digitalWrite(7, HIGH);
  //if (packetState < STATE_PACKETHEADER_DONE) { //new packet
@@ -76,62 +76,63 @@ boolean SerialControl::ReadPacket()
     while (availableBytes) {
       byte incomingByte = Serial.read();
       availableBytes--;
-      
-      mySerial->write("C:");
-      mySerial->print(incomingByte,HEX);
-      mySerial->println();
-       //mySerial->write(incomingByte);
-      if (packetState == STATE_STARTCODE_FOUND){
-     // mySerial->write("wwww");
-        //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
-       //delay(1000);                       // wait for a second
-        //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
-       //delay(10000);                       // wait for a second
-        packetLen = incomingByte;
-        packetState = STATE_PACKETLEN_LOW;
-      } 
-      else if (packetState == STATE_PACKETLEN_LOW) {
-        packetLen |= incomingByte << 8;
-        mySerial->write("D");
-        if (packetLen > MAX_COMMAND_SIZE)
-          packetLen = MAX_COMMAND_SIZE;
-          mySerial->write("\t");
-          mySerial->print(packetLen, DEC);
-        if (packetLen >= sizeof(struct PCPPacket) && packetLen <= MAX_COMMAND_SIZE) {
-          packetState = STATE_PACKETHEADER_DONE;
-          mySerial->write("E");
-          buf[0] = START_CODE;
-          buf[1] = packetLen & 0xff;
-          buf[2] = (packetLen & 0xff00)>>8;
-          bEscapeCodeFound = false;
-          packetRealLen = 3;
-          packetLen -= 3;
-        }
-        else{
-          packetState = STATE_START; //reset
-        }
-        break;
-      }
-      else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
-
-          buf[packetRealLen++] = incomingByte;
-      }
-      else if ( packetState == STATE_START && incomingByte == START_CODE)
-        packetState = STATE_STARTCODE_FOUND;
-      else if (incomingByte == ESCAPE_CODE) {
-          bEscapeCodeFound = true;
-          //if (packetRealLen>2)
-          ProcessPacket(buf, packetRealLen);
-          packetState = STATE_START;
-          packetRealLen=0;
-      }
-      else
-      {
-          bEscapeCodeFound = false;
-          packetState = STATE_START;
-      }
+     mySerial->write(incomingByte);
+//      
+//      mySerial->write("C:");
+//      mySerial->print(incomingByte,HEX);
+//      mySerial->println();
+//       //mySerial->write(incomingByte);
+//      if (packetState == STATE_STARTCODE_FOUND){
+//     // mySerial->write("wwww");
+//        //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
+//       //delay(1000);                       // wait for a second
+//        //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
+//       //delay(10000);                       // wait for a second
+//        packetLen = incomingByte;
+//        packetState = STATE_PACKETLEN_LOW;
+//      } 
+//      else if (packetState == STATE_PACKETLEN_LOW) {
+//        packetLen |= incomingByte << 8;
+//        mySerial->write("D");
+//        if (packetLen > MAX_COMMAND_SIZE)
+//          packetLen = MAX_COMMAND_SIZE;
+//          mySerial->write("\t");
+//          mySerial->print(packetLen, DEC);
+//        if (packetLen >= sizeof(struct PCPPacket) && packetLen <= MAX_COMMAND_SIZE) {
+//          packetState = STATE_PACKETHEADER_DONE;
+//          mySerial->write("E");
+//          buf[0] = START_CODE;
+//          buf[1] = packetLen & 0xff;
+//          buf[2] = (packetLen & 0xff00)>>8;
+//          bEscapeCodeFound = false;
+//          packetRealLen = 3;
+//          packetLen -= 3;
+//        }
+//        else{
+//          packetState = STATE_START; //reset
+//        }
+//        break;
+//      }
+//      else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
+//
+//          buf[packetRealLen++] = incomingByte;
+//      }
+//      else if ( packetState == STATE_START && incomingByte == START_CODE)
+//        packetState = STATE_STARTCODE_FOUND;
+//      else if (incomingByte == ESCAPE_CODE) {
+//          bEscapeCodeFound = true;
+//          //if (packetRealLen>2)
+//          ProcessPacket(buf, packetRealLen);
+//          packetState = STATE_START;
+//          packetRealLen=0;
+//      }
+//      else
+//      {
+//          bEscapeCodeFound = false;
+//          packetState = STATE_START;
+//      }
     }
- // }*/
+ // }
   
   /*if (packetState == STATE_PACKETHEADER_DONE){
          mySerial->write("S");
