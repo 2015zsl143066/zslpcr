@@ -25,7 +25,10 @@
 #include "thermistors.h"
 #include "debug.h"
 #define BAUD_RATE 4800
-
+const char HEATING_STR[]  = "heating";
+const char COOLING_STR[]  = "cooling";
+const char HOLDING_STR[] = "holding";
+const char* IDLE_STR = "idle";
 SerialControl::SerialControl(Display* pDisplay)
 : ipDisplay(pDisplay)
 , packetState(STATE_START)
@@ -42,10 +45,10 @@ SerialControl::SerialControl(Display* pDisplay)
    //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
    //delay(2000);                       // wait for a second
   Serial.begin(BAUD_RATE);
- /* while (!Serial) {
+  while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-  Serial.write("start");*/
+  Serial.write("start");
 }
 
 SerialControl::~SerialControl() {
@@ -76,63 +79,71 @@ boolean SerialControl::ReadPacket()
     while (availableBytes) {
       byte incomingByte = Serial.read();
       availableBytes--;
-     mySerial->write(incomingByte);
-//      
+  //  Serial.write(incomingByte);
+      
 //      mySerial->write("C:");
 //      mySerial->print(incomingByte,HEX);
 //      mySerial->println();
-//       //mySerial->write(incomingByte);
-//      if (packetState == STATE_STARTCODE_FOUND){
-//     // mySerial->write("wwww");
-//        //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
-//       //delay(1000);                       // wait for a second
-//        //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
-//       //delay(10000);                       // wait for a second
-//        packetLen = incomingByte;
-//        packetState = STATE_PACKETLEN_LOW;
-//      } 
-//      else if (packetState == STATE_PACKETLEN_LOW) {
-//        packetLen |= incomingByte << 8;
-//        mySerial->write("D");
-//        if (packetLen > MAX_COMMAND_SIZE)
-//          packetLen = MAX_COMMAND_SIZE;
-//          mySerial->write("\t");
-//          mySerial->print(packetLen, DEC);
-//        if (packetLen >= sizeof(struct PCPPacket) && packetLen <= MAX_COMMAND_SIZE) {
-//          packetState = STATE_PACKETHEADER_DONE;
-//          mySerial->write("E");
-//          buf[0] = START_CODE;
-//          buf[1] = packetLen & 0xff;
-//          buf[2] = (packetLen & 0xff00)>>8;
-//          bEscapeCodeFound = false;
-//          packetRealLen = 3;
-//          packetLen -= 3;
-//        }
-//        else{
-//          packetState = STATE_START; //reset
-//        }
-//        break;
-//      }
-//      else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
-//
-//          buf[packetRealLen++] = incomingByte;
-//      }
-//      else if ( packetState == STATE_START && incomingByte == START_CODE)
-//        packetState = STATE_STARTCODE_FOUND;
-//      else if (incomingByte == ESCAPE_CODE) {
-//          bEscapeCodeFound = true;
-//          //if (packetRealLen>2)
-//          ProcessPacket(buf, packetRealLen);
-//          packetState = STATE_START;
-//          packetRealLen=0;
-//      }
-//      else
-//      {
-//          bEscapeCodeFound = false;
-//          packetState = STATE_START;
-//      }
+       //mySerial->write(incomingByte);
+      if (packetState == STATE_STARTCODE_FOUND){
+            Serial.write(0x05);
+     // mySerial->write("wwww");
+        //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
+       //delay(1000);                       // wait for a second
+        //digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
+       //delay(10000);                       // wait for a second
+        packetLen = incomingByte;
+        packetState = STATE_PACKETLEN_LOW;
+      } 
+      else if (packetState == STATE_PACKETLEN_LOW) {
+                    Serial.write(0x06);
+        packetLen |= incomingByte << 8;
+       // mySerial->write("D");
+        if (packetLen > MAX_COMMAND_SIZE)
+          packetLen = MAX_COMMAND_SIZE;
+         // mySerial->write("\t");
+        //  mySerial->print(packetLen, DEC);
+        if (packetLen >= sizeof(struct PCPPacket) && packetLen <= MAX_COMMAND_SIZE) {
+          packetState = STATE_PACKETHEADER_DONE;
+       //   mySerial->write("E");
+          buf[0] = START_CODE;
+          buf[1] = packetLen & 0xff;
+          buf[2] = (packetLen & 0xff00)>>8;
+          bEscapeCodeFound = false;
+          packetRealLen = 3;
+          packetLen -= 3;
+        }
+        else{
+          packetState = STATE_START; //reset
+        }
+        break;
+      }
+      else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
+                                Serial.write(0x07);
+          buf[packetRealLen++] = incomingByte;
+      }
+      else if ( packetState == STATE_START && incomingByte == START_CODE){
+            Serial.write(0x08);
+                packetState = STATE_STARTCODE_FOUND;
+
+      }
+      else if (incomingByte == ESCAPE_CODE) {
+                  Serial.write(0x09);
+            Serial.write( packetRealLen);
+          bEscapeCodeFound = true;
+          //if (packetRealLen>2)
+          ProcessPacket(buf, packetRealLen);
+          packetState = STATE_START;
+          packetRealLen=0;
+      }
+      else
+      {
+                    Serial.write(0x11);
+          bEscapeCodeFound = false;
+          packetState = STATE_START;
+      }
     }
- // }
+  //}
   
   /*if (packetState == STATE_PACKETHEADER_DONE){
          mySerial->write("S");
@@ -170,13 +181,14 @@ boolean SerialControl::ReadPacket()
 
 void SerialControl::ProcessPacket(byte* data, int datasize)
 {
+        Serial.flush();
   PCPPacket* packet = (PCPPacket*)data;
   uint8_t packetType = packet->eType & 0xf0;
   uint8_t packetSeq = packet->eType & 0x0f;
   uint8_t result = false;
   char* pCommandBuf;
-  mySerial->write("\t");
-  mySerial->print(packetType,HEX);
+      Serial.write(packetType);
+      Serial.flush();
   switch(packetType){
   case SEND_CMD:
     data[datasize] = '\0';
@@ -208,40 +220,51 @@ void SerialControl::SendStatus() {
   Thermocycler::ProgramState state = GetThermocycler().GetProgramState();
   const char* szStatus = GetProgramStateString_P(state); 
   const char* szThermState = GetThermalStateString_P(GetThermocycler().GetThermalState());
-   mySerial->write("L");   
+//     Serial.write(*(szThermState));
+//     Serial.write(*(szThermState+1));
+//     Serial.write(*(szThermState+2));
+//     Serial.write(*(szThermState+3));
+//     Serial.write(*(szThermState+4));
+//     for(int i=0; i< 5;i++){
+//  Serial.write(*(szThermState+i)); 
+//  }
   char statusBuf[STATUS_FILE_LEN];
+   
   char* statusPtr = statusBuf;
   Thermocycler& tc = GetThermocycler();
-   mySerial->write("M");   
+     
   statusPtr = AddParam(statusPtr, 'd', (unsigned long)iCommandId, true);
-  statusPtr = AddParam_P(statusPtr, 's', szStatus);
+  //statusPtr = AddParam_P(statusPtr, 's', szStatus);
   statusPtr = AddParam(statusPtr, 'l', (int)tc.GetLidTemp());
   statusPtr = AddParam(statusPtr, 'b', tc.GetPlateTemp(), 1, false);
+
   statusPtr = AddParam_P(statusPtr, 't', szThermState);
-  statusPtr = AddParam(statusPtr, 'o', GetThermocycler().GetDisplay()->GetContrast());
- mySerial->write("N"); 
-  if (state == Thermocycler::ERunning || state == Thermocycler::EComplete) {
-    statusPtr = AddParam(statusPtr, 'e', tc.GetElapsedTimeS());
-    statusPtr = AddParam(statusPtr, 'r', tc.GetTimeRemainingS());
-    statusPtr = AddParam(statusPtr, 'u', tc.GetNumCycles());
-    statusPtr = AddParam(statusPtr, 'c', tc.GetCurrentCycleNum());
-    //statusPtr = AddParam(statusPtr, 'n', tc.GetProgName());
-    if (tc.GetCurrentStep() != NULL)
-      statusPtr = AddParam(statusPtr, 'p', tc.GetCurrentStep()->GetName());
-      
-  } else if (state == Thermocycler::EIdle) {
-    statusPtr = AddParam(statusPtr, 'v', OPENPCR_FIRMWARE_VERSION_STRING);
-  }
-  statusPtr++; //to include null terminator
-   mySerial->write("Z"); 
-  //send packet
-  PCPPacket packet(STATUS_RESP);
-  packet.length = sizeof(packet) + STATUS_FILE_LEN;
-  Serial.write((byte*)&packet, sizeof(packet));
-  int statusBufLen = statusPtr - statusBuf;
-  Serial.write((byte*)statusBuf, statusBufLen);
-  for (int i = statusBufLen; i < STATUS_FILE_LEN; i++)
-    Serial.write(0x20);
+ statusPtr = AddParam(statusPtr, 'o', GetThermocycler().GetDisplay()->GetContrast());
+ const char* test ="abc";
+// for(uint8_t i=0; i< 5;i++){
+//   Serial.write(*(szStatus+i)); }
+//  if (state == Thermocycler::ERunning || state == Thermocycler::EComplete) {
+//    statusPtr = AddParam(statusPtr, 'e', tc.GetElapsedTimeS());
+//    statusPtr = AddParam(statusPtr, 'r', tc.GetTimeRemainingS());
+//    statusPtr = AddParam(statusPtr, 'u', tc.GetNumCycles());
+//    statusPtr = AddParam(statusPtr, 'c', tc.GetCurrentCycleNum());
+//    //statusPtr = AddParam(statusPtr, 'n', tc.GetProgName());
+//    if (tc.GetCurrentStep() != NULL)
+//      statusPtr = AddParam(statusPtr, 'p', tc.GetCurrentStep()->GetName());
+//      
+//  } else if (state == Thermocycler::EIdle) {
+//    statusPtr = AddParam(statusPtr, 'v', OPENPCR_FIRMWARE_VERSION_STRING);
+//  }
+//  statusPtr++; //to include null terminator
+//  // mySerial->write("Z"); 
+//  //send packet
+//  PCPPacket packet(STATUS_RESP);
+//  packet.length = sizeof(packet) + STATUS_FILE_LEN;
+//  Serial.write((byte*)&packet, sizeof(packet));
+//  int statusBufLen = statusPtr - statusBuf;
+//  Serial.write((byte*)statusBuf, statusBufLen);
+//  for (int i = statusBufLen; i < STATUS_FILE_LEN; i++)
+//    Serial.write(0x20);
 }
 
 char* SerialControl::AddParam(char* pBuffer, char key, int val, boolean init) {
@@ -291,25 +314,39 @@ char* SerialControl::AddParam(char* pBuffer, char key, const char* szVal, boolea
     
   return pBuffer;
 }
-
+const char* tt="abc";
 char* SerialControl::AddParam_P(char* pBuffer, char key, const char* szVal, boolean init) {
   if (!init)
     *pBuffer++ = '&';
   *pBuffer++ = key;
   *pBuffer++ = '=';
-  strcpy_P(pBuffer, szVal);
-  while (*pBuffer != '\0')
-    pBuffer++;
-    
+  
+//  for (int i=0;i<3;i++)
+//  {
+//   //char  myChar =  pgm_read_byte_near(szVal + i);
+//     Serial.write((char)(*(szVal+i)));
+//    }
+//  strcpy_P(pBuffer,(char*)pgm_read_word( szVal));
+//  while (*pBuffer != '\0')
+//    pBuffer++;
+//   strcpy(pBuffer, szVal);
+//  while (*pBuffer != '\0')
+//    pBuffer++; 
   return pBuffer;
 }
 
-const char STOPPED_STR[] PROGMEM = "stopped";
-const char LIDWAIT_STR[] PROGMEM = "lidwait";
-const char RUNNING_STR[] PROGMEM = "running";
-const char COMPLETE_STR[] PROGMEM = "complete";
-const char STARTUP_STR[] PROGMEM = "startup";
-const char ERROR_STR[] PROGMEM = "error";
+const char STOPPED_STR[]  = "stopped";
+const char LIDWAIT_STR[]  = "lidwait";
+const char RUNNING_STR[]  = "running";
+const char COMPLETE_STR[]  = "complete";
+const char STARTUP_STR[]  = "startup";
+const char ERROR_STR[]  = "error";
+//const char STOPPED_STR[] PROGMEM = "stopped";
+//const char LIDWAIT_STR[] PROGMEM = "lidwait";
+//const char RUNNING_STR[] PROGMEM = "running";
+//const char COMPLETE_STR[] PROGMEM = "complete";
+//const char STARTUP_STR[] PROGMEM = "startup";
+//const char ERROR_STR[] PROGMEM = "error";
 const char* SerialControl::GetProgramStateString_P(Thermocycler::ProgramState state) {
   switch (state) {
   case Thermocycler::EStopped:
@@ -328,10 +365,14 @@ const char* SerialControl::GetProgramStateString_P(Thermocycler::ProgramState st
   }
 }
 
-const char HEATING_STR[] PROGMEM = "heating";
-const char COOLING_STR[] PROGMEM = "cooling";
-const char HOLDING_STR[] PROGMEM = "holding";
-const char IDLE_STR[] PROGMEM = "idle";
+//const char HEATING_STR[] PROGMEM = "heating";
+//const char COOLING_STR[] PROGMEM = "cooling";
+//const char HOLDING_STR[] PROGMEM = "holding";
+//const char IDLE_STR[] PROGMEM = "idle";
+//const char HEATING_STR[]  = "heating";
+//const char COOLING_STR[]  = "cooling";
+//const char HOLDING_STR[] = "holding";
+//const char IDLE_STR[] = "idle";
 const char* SerialControl::GetThermalStateString_P(Thermocycler::ThermalState state) {
   switch (state) {
   case Thermocycler::EHeating:

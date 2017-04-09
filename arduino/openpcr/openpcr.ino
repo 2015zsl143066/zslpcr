@@ -42,7 +42,7 @@ void setup() {
 
 
   // set the data rate for the SoftwareSerial port
-  mySerial->begin(115200);
+ // mySerial->begin(115200);
    //pinMode(7, OUTPUT);
    //digitalWrite(7, LOW);
  // mySerial->write("start");

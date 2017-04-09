@@ -190,10 +190,19 @@ PcrStatus Thermocycler::Start() {
 
     return ESuccess;
 }
-
+unsigned long period;
+unsigned long offset;
 // internal
 void Thermocycler::Loop() {
-    /*if(iProgramState == EStartup){
+  period = millis();
+  if (period>offset)
+  {
+    offset = period + 2000;
+    Serial.write(iProgramState);
+   Serial.write((int)iPeltierPwm);
+    }
+  
+ /*if(iProgramState == EStartup){
       if (millis() > STARTUP_DELAY){
     digitalWrite(7, HIGH);
     }
@@ -479,13 +488,16 @@ void Thermocycler::SetPeltier(ThermalDirection dir, int pwm) {
 }
 
 void Thermocycler::ProcessCommand(SCommand &command) {
+  
     if (command.command == SCommand::EStart) {
+        Serial.write(0x50);
         //find display cycle
         Cycle *pProgram = command.pProgram;
         Cycle *pDisplayCycle = pProgram;
         int largestCycleCount = 0;
 
         for (int i = 0; i < pProgram->GetNumComponents(); i++) {
+          Serial.write(0x50);
             ProgramComponent *pComp = pProgram->GetComponent(i);
             if (pComp->GetType() == ProgramComponent::ECycle) {
                 Cycle *pCycle = (Cycle *) pComp;

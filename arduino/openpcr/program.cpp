@@ -123,6 +123,7 @@ void CommandParser::ParseCommand(SCommand& command, char* pCommandBuf) {
 }
 
 void CommandParser::AddComponent(SCommand* pCommand, char key, char* szValue) {
+ //Serial.write(*(szValue));
   switch(key) {
   case 'n':
     strncpy(pCommand->name, szValue, sizeof(pCommand->name) - 1);
@@ -130,7 +131,10 @@ void CommandParser::AddComponent(SCommand* pCommand, char key, char* szValue) {
     break;
   case 'c':
     if (strcmp(szValue, "start") == 0)
-      pCommand->command = SCommand::EStart;
+      {
+        pCommand->command = SCommand::EStart;
+        Serial.write("st");
+      }
     else if (strcmp(szValue, "stop") == 0)
       pCommand->command = SCommand::EStop;
     else if (strcmp(szValue, "cfg") == 0)

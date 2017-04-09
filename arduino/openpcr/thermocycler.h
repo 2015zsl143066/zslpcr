@@ -75,8 +75,10 @@ public:
   
   boolean Ramping() { return iRamping; }
   int GetPeltierPwm() { return iPeltierPwm; }
-  double GetLidTemp() { return iLidThermistor.GetTemp(); }
-  double GetPlateTemp() { return iPlateThermistor.GetTemp(); }
+// double GetLidTemp() { return iLidThermistor.GetTemp(); }
+double GetLidTemp() { return 110.0; }//等安装好盖子后，请还原。
+ double GetPlateTemp() { return iPlateThermistor.GetTemp(); }
+
   unsigned long GetTimeRemainingS() { return iEstimatedTimeRemainingS; }
   unsigned long GetElapsedTimeS() { return (millis() - iProgramStartTimeMs) / 1000; }
   unsigned long GetRampElapsedTimeMs() { return millis() - iRampStartTime; }
