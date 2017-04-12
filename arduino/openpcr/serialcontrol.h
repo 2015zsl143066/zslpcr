@@ -62,7 +62,7 @@ private:
   boolean ReadPacket(); //returns true if bytes were read
   void ProcessPacket(byte* data, int datasize);
   void SendStatus();
-
+  void SendStatusSimple();
   char* AddParam(char* pBuffer, char key, int val, boolean init = false);  
   char* AddParam(char* pBuffer, char key, unsigned long val, boolean init = false);
   char* AddParam(char* pBuffer, char key, float val, int decimalDigits, boolean pad, boolean init = false);

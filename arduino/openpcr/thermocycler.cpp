@@ -197,9 +197,25 @@ void Thermocycler::Loop() {
   period = millis();
   if (period>offset)
   {
-    offset = period + 2000;
-    Serial.write(iProgramState);
-   Serial.write((int)iPeltierPwm);
+    offset = period + 5000;
+//    Serial.print("state:");
+//    Serial.print(iProgramState,DEC);
+//    Serial.println();
+   // Serial.print("step:");
+    //Serial.print(ipCurrentStep->GetName());
+//    //Serial.println();
+//     Serial.print("curenttemp:");
+//    Serial.print(GetPlateTemp());
+//    Serial.println();
+//    Serial.print("temp:");
+//    Serial.print(ipCurrentStep->GetTemp(),2);
+//    Serial.println();
+//    Serial.print("pwm:");
+//   Serial.print(iPeltierPwm,1);
+//   Serial.println();
+Serial.write('t');
+uint8_t temp = (uint8_t) iTargetPlateTemp;
+Serial.print(temp);
     }
   
  /*if(iProgramState == EStartup){

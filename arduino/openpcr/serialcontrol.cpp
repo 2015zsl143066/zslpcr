@@ -86,7 +86,7 @@ boolean SerialControl::ReadPacket()
 //      mySerial->println();
        //mySerial->write(incomingByte);
       if (packetState == STATE_STARTCODE_FOUND){
-            Serial.write(0x05);
+           Serial.write('a');
      // mySerial->write("wwww");
         //digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
        //delay(1000);                       // wait for a second
@@ -96,7 +96,7 @@ boolean SerialControl::ReadPacket()
         packetState = STATE_PACKETLEN_LOW;
       } 
       else if (packetState == STATE_PACKETLEN_LOW) {
-                    Serial.write(0x06);
+                   Serial.write('b');
         packetLen |= incomingByte << 8;
        // mySerial->write("D");
         if (packetLen > MAX_COMMAND_SIZE)
@@ -119,17 +119,20 @@ boolean SerialControl::ReadPacket()
         break;
       }
       else if (packetState == STATE_PACKETHEADER_DONE && incomingByte !=ESCAPE_CODE ){
-                                Serial.write(0x07);
+                                Serial.write('c');
           buf[packetRealLen++] = incomingByte;
       }
       else if ( packetState == STATE_START && incomingByte == START_CODE){
-            Serial.write(0x08);
+            Serial.write('d');
                 packetState = STATE_STARTCODE_FOUND;
 
       }
       else if (incomingByte == ESCAPE_CODE) {
-                  Serial.write(0x09);
-            Serial.write( packetRealLen);
+                Serial.write('e');
+//            Serial.print("paktLen:");
+//            Serial.print( packetRealLen,DEC);
+//            Serial.println();
+//            Serial.flush();
           bEscapeCodeFound = true;
           //if (packetRealLen>2)
           ProcessPacket(buf, packetRealLen);
@@ -138,7 +141,7 @@ boolean SerialControl::ReadPacket()
       }
       else
       {
-                    Serial.write(0x11);
+                    Serial.write('E');
           bEscapeCodeFound = false;
           packetState = STATE_START;
       }
@@ -181,14 +184,14 @@ boolean SerialControl::ReadPacket()
 
 void SerialControl::ProcessPacket(byte* data, int datasize)
 {
-        Serial.flush();
+        //Serial.flush();
   PCPPacket* packet = (PCPPacket*)data;
   uint8_t packetType = packet->eType & 0xf0;
   uint8_t packetSeq = packet->eType & 0x0f;
   uint8_t result = false;
   char* pCommandBuf;
-      Serial.write(packetType);
-      Serial.flush();
+      //Serial.write(packetType);
+     // Serial.flush();
   switch(packetType){
   case SEND_CMD:
     data[datasize] = '\0';
@@ -215,7 +218,9 @@ void SerialControl::ProcessPacket(byte* data, int datasize)
 }
 
 #define STATUS_FILE_LEN 100
-
+void SerialControl::SendStatusSimple(){
+   
+  }
 void SerialControl::SendStatus() {
   Thermocycler::ProgramState state = GetThermocycler().GetProgramState();
   const char* szStatus = GetProgramStateString_P(state); 

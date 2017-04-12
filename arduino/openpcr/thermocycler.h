@@ -76,6 +76,7 @@ public:
   boolean Ramping() { return iRamping; }
   int GetPeltierPwm() { return iPeltierPwm; }
 // double GetLidTemp() { return iLidThermistor.GetTemp(); }
+
 double GetLidTemp() { return 110.0; }//等安装好盖子后，请还原。
  double GetPlateTemp() { return iPlateThermistor.GetTemp(); }
 

@@ -29,8 +29,7 @@ Thermocycler* gpThermocycler = NULL;
 
 boolean InitialStart() {
   for (int i = 0; i < 50; i++) {
-    if (EEPROM.read(i) != 0xFF)
-      return false;
+    if (EEPROM.read(i) != 0xFF)      return false;
   }
   
   return true;
